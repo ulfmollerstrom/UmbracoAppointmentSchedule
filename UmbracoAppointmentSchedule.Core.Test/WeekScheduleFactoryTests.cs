@@ -101,7 +101,6 @@ namespace UmbracoAppointmentSchedule.Core.Test
             var actual = factory.Create();
 
             //Assert
-            Assert.IsNotNull(actual);
             Assert.AreEqual(5, actual.DaySchedules.Count);
         }
 
