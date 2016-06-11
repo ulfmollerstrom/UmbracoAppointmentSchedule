@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace UmbracoAppointmentSchedule.Core.Test
 {
@@ -35,13 +31,20 @@ namespace UmbracoAppointmentSchedule.Core.Test
             var factory = new WeekScheduleFactory
             {
                 Today = DateTime.Today,
-                NumberOfTimeSlotsForAppointments = 3
+                NumberOfTimeSlotsForAppointments = 3,
+                AssignOnWeekends = true
             };
 
             var weekSchedule = factory.Create();
 
             //Act
-            var success = weekSchedule.Add(new Appointment {Date = DateTime.Today, Slot = 2, Name = "Nisse Hult", Phone = "24682468"});
+            var success = weekSchedule.Add(new Appointment
+                                                {
+                                                    Date = DateTime.Today,
+                                                    Slot = 2,
+                                                    Name = "Nisse Hult",
+                                                    Phone = "24682468"
+                                                });
 
             //Assert
             Assert.IsTrue(success);
@@ -55,7 +58,8 @@ namespace UmbracoAppointmentSchedule.Core.Test
             var factory = new WeekScheduleFactory
             {
                 Today = DateTime.Today,
-                NumberOfTimeSlotsForAppointments = 3
+                NumberOfTimeSlotsForAppointments = 3,
+                AssignOnWeekends = true
             };
 
             var weekSchedule = factory.Create();
@@ -68,28 +72,83 @@ namespace UmbracoAppointmentSchedule.Core.Test
 
         }
 
-
         [Test]
-        public void GetTheAppointmentsFromWeekSchedule()
+        public void GetAnAppointmentFromWeekSchedule()
         {
             //Arrange
             var factory = new WeekScheduleFactory
             {
                 Today = DateTime.Today,
-                NumberOfTimeSlotsForAppointments = 3
+                NumberOfTimeSlotsForAppointments = 3,
+                AssignOnWeekends = true
             };
 
+            var weekSchedule = factory.Create();
+
+            var nisseHult = new Appointment
+            {
+                Date = DateTime.Today,
+                Slot = 2,
+                Name = "Nisse Hult",
+                Phone = "24682468"
+            };
+
+            weekSchedule.Add(nisseHult);
+
             //Act
-            var actual = factory.Create();
+            var expected = weekSchedule.GetAppointment(date: DateTime.Today, slot: 2);
+            
+            //Assert
+            Assert.AreEqual(expected, nisseHult);
+        }
 
-            //var expected = new
 
+        [Test]
+        public void GetAppointmentsFromWeekSchedule()
+        {
+            //Arrange
+            var factory = new WeekScheduleFactory
+            {
+                Today = DateTime.Today,
+                NumberOfTimeSlotsForAppointments = 3,
+                AssignOnWeekends = true
+            };
+
+            var weekSchedule = factory.Create();
+
+            var nisseHult = new Appointment
+            {
+                Date = DateTime.Today,
+                Slot = 2,
+                Name = "Nisse Hult",
+                Phone = "24682468"
+            };
+
+            var ebbaHult = new Appointment
+            {
+                Date = DateTime.Today,
+                Slot = 1,
+                Name = "Ebba Hult",
+                Phone = "24682468"
+            };
+
+            var arneHult = new Appointment
+            {
+                Date = DateTime.Today.AddDays(-1),
+                Slot = 2,
+                Name = "Arne Hult",
+                Phone = "24682468"
+            };
+
+            weekSchedule.Add(nisseHult);
+            weekSchedule.Add(ebbaHult);
+            weekSchedule.Add(arneHult);
 
             //Act
-            //var actual = new
+            var expected = weekSchedule.GetAppointments();
 
             //Assert
-
+            Assert.IsNotEmpty(expected);
         }
 
     }

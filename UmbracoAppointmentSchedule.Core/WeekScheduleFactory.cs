@@ -7,8 +7,8 @@ namespace UmbracoAppointmentSchedule.Core
 {
     public class WeekScheduleFactory
     {
-        public bool AssignOnWeekends { get; set; }
-        public bool AssignOnHolidays { get; set; }
+        public bool AssignOnWeekends { get; set; } = false;
+        public bool AssignOnHolidays { get; set; } = false;
         public DateTime Today { get; set; } = DateTime.Today;
         public int NumberOfTimeSlotsForAppointments { get; set; } = 1;
         public List<DateTime> Holidays { get; set; } = new List<DateTime>(0);
