@@ -41,5 +41,10 @@ namespace UmbracoAppointmentSchedule.Core
                     .SelectMany(daySchedule => daySchedule.Appointments)
                     .Where(appointment => appointment != null).ToList();
         }
+
+        public int AddRange(IEnumerable<Appointment> appointments)
+        {
+            return appointments.Sum(appointment => Add(appointment) ? 1 : 0);
+        }
     }
 }

@@ -11,18 +11,6 @@ namespace UmbracoAppointmentSchedule.Core.Test
     [TestFixture]
     public class WeekScheduleFactoryTests
     {
-        [Test]
-        public void CanCreateWeekScheduleFactory()
-        {
-            //Arrange
-            var expected = new WeekScheduleFactory { AssignOnWeekends = true, AssignOnHolidays = true};
-
-            //Act
-            //var actual = new
-
-            //Assert
-            Assert.IsNotNull(expected);
-        }
 
         [Test]
         public void WeekSchedule()
@@ -32,7 +20,7 @@ namespace UmbracoAppointmentSchedule.Core.Test
             {
                 AssignOnWeekends = true,
                 AssignOnHolidays = true,
-                Today = DateTime.Today,
+                Today = new DateTime(2016, 6, 10),
                 NumberOfTimeSlotsForAppointments = 3,
                 Holidays = new List<DateTime> {new DateTime(2016, 6, 6)}
             };

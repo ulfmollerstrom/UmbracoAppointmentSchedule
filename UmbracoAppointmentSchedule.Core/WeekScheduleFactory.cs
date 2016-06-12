@@ -15,7 +15,7 @@ namespace UmbracoAppointmentSchedule.Core
 
         public WeekSchedule Create()
         {
-            var dates = GetThisWeek(Today, AssignOnWeekends, AssignOnHolidays);
+            var dates = GetThisWeek(Today, AssignOnWeekends);
 
             var daySchedules = dates.Select(date => new DaySchedule
                                                     {
@@ -29,7 +29,12 @@ namespace UmbracoAppointmentSchedule.Core
             return weekSchedule;
         }
 
-        private IEnumerable<DateTime> GetThisWeek(DateTime today, bool assignOnWeekends = false, bool assignOnHolidays = false)
+        private IEnumerable<DateTime> GetThisWeek(DateTime today, bool assignOnWeekends = false)
+        {
+            return GetThisWeek(today, new List<DateTime>(0), false, assignOnWeekends);
+        }
+
+        private IEnumerable<DateTime> GetThisWeek(DateTime today, IEnumerable<DateTime> holidays, bool assignOnHolidays = false, bool assignOnWeekends = false)
         {
             var monday = GetDateForMonday(today);
 
@@ -37,7 +42,7 @@ namespace UmbracoAppointmentSchedule.Core
             var dates = Enumerable.Range(0, numberOfDaysToAdd).Select(i => monday.AddDays(i));
 
             if (!assignOnHolidays)
-                dates = dates.Except(Holidays);
+                dates = dates.Except(holidays);
 
             return dates.ToList();
         }

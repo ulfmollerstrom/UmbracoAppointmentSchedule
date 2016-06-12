@@ -102,6 +102,58 @@ namespace UmbracoAppointmentSchedule.Core.Test
             Assert.AreEqual(expected, nisseHult);
         }
 
+        [Test]
+        public void AddRangeAppointments()
+        {
+            //Arrange
+            var factory = new WeekScheduleFactory
+            {
+                Today = DateTime.Today,
+                NumberOfTimeSlotsForAppointments = 3,
+                AssignOnWeekends = true
+            };
+
+            var weekSchedule = factory.Create();
+
+            var success = weekSchedule.AddRange(appointments: AppointmentsRange());
+
+            //Act
+            var expected = weekSchedule.GetAppointments();
+
+            //Assert
+            Assert.AreEqual(success, 3);
+            Assert.AreEqual(expected.Count, 3);
+
+
+        }
+
+        private IEnumerable<Appointment> AppointmentsRange()
+        {
+            return new List<Appointment>
+            {
+                new Appointment
+                {
+                    Date = DateTime.Today,
+                    Slot = 2,
+                    Name = "Nisse Hult",
+                    Phone = "24682468"
+                },
+                new Appointment
+                {
+                    Date = DateTime.Today,
+                    Slot = 1,
+                    Name = "Ebba Hult",
+                    Phone = "24682468"
+                },
+                new Appointment
+                {
+                    Date = DateTime.Today.AddDays(-1),
+                    Slot = 2,
+                    Name = "Arne Hult",
+                    Phone = "24682468"
+                }
+            };
+        }
 
         [Test]
         public void GetAppointmentsFromWeekSchedule()
