@@ -44,12 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DayScheduleTests.cs" />
-    <Compile Include="SerializeScheduleRepositoryTests.cs" />
-    <Compile Include="PopulatedWeekScheduleFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WeekScheduleFactoryTests.cs" />
-    <Compile Include="WeekScheduleTests.cs" />
+    <Compile Include="Tests\DayScheduleTests.cs" />
+    <Compile Include="Tests\PopulatedWeekScheduleFactoryTests.cs" />
+    <Compile Include="Tests\SerializeScheduleRepositoryTests.cs" />
+    <Compile Include="Tests\WeekScheduleFactoryTests.cs" />
+    <Compile Include="Tests\WeekScheduleTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

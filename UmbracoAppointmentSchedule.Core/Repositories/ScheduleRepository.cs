@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using UmbracoAppointmentSchedule.Core.Common;
+using UmbracoAppointmentSchedule.Core.Models;
 
-namespace UmbracoAppointmentSchedule.Core
+namespace UmbracoAppointmentSchedule.Core.Repositories
 {
     public class ScheduleRepository
     {

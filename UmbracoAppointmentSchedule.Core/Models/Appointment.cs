@@ -1,6 +1,6 @@
 using System;
 
-namespace UmbracoAppointmentSchedule.Core
+namespace UmbracoAppointmentSchedule.Core.Models
 {
     public class Appointment : IEquatable<Appointment>
     {

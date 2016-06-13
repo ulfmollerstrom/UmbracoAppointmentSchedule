@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using NUnit.Framework;
+using UmbracoAppointmentSchedule.Core.Models;
 
-namespace UmbracoAppointmentSchedule.Core.Test
+namespace UmbracoAppointmentSchedule.Core.Test.Tests
 {
     [TestFixture]
     public class DayScheduleTests

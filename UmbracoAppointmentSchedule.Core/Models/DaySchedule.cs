@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UmbracoAppointmentSchedule.Core
+namespace UmbracoAppointmentSchedule.Core.Models
 {
     public class DaySchedule
     {

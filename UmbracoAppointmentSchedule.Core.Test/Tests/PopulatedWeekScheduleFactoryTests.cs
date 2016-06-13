@@ -1,52 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework.Internal;
 using NUnit.Framework;
+using UmbracoAppointmentSchedule.Core.Common;
+using UmbracoAppointmentSchedule.Core.Factories;
+using UmbracoAppointmentSchedule.Core.Models;
+using UmbracoAppointmentSchedule.Core.Repositories;
 
-namespace UmbracoAppointmentSchedule.Core.Test
+namespace UmbracoAppointmentSchedule.Core.Test.Tests
 {
     [TestFixture]
-    public class SerializeScheduleRepositoryTests
+    public class PopulatedWeekScheduleFactoryTests
     {
         [Test]
-        public void SerializeToJsonTest()
+        public void CreatePopulatedWeekScheduleFactory()
         {
             //Arrange
-            //var expected = new
-            
+            var scheduleRepository = new ScheduleRepository();
 
             //Act
-            var scheduleRepository = GetScheduleRepository();
-            var jsonString = scheduleRepository.Serialize();
-
-
-            //Assert
-            Assert.IsNotEmpty(jsonString);
-
-        }
-
-        [Test]
-        public void DeserializeToScheduleRepositoryTest()
-        {
-            //Arrange
-            //var expected = new
-            
-            //Act
-            var scheduleRepository = GetScheduleRepository();
-            var jsonString = scheduleRepository.Serialize();
-
-            var actual = new ScheduleRepository();
-            actual.Deserialize(jsonString, DateTime.Today);
+            var actual = new PopulatedWeekScheduleFactory(scheduleRepository);
 
             //Assert
             Assert.IsNotNull(actual);
-            Assert.AreEqual(jsonString, actual.Serialize());
-
         }
 
+        [Test]
+        public void PopulatedFullWeek()
+        {
+            //Arrange
+            var scheduleRepository = GetScheduleRepository();
+
+            //Act
+            var scheduleFactory = new PopulatedWeekScheduleFactory(scheduleRepository);
+
+            var weekSchedule = scheduleFactory.Create();
+            var nh = weekSchedule.GetAppointments()[0];
+            //Assert
+            Assert.IsNotEmpty(weekSchedule.GetAppointments());
+            Assert.AreEqual("Nisse Hult", nh.Name);
+        }
 
         private static ScheduleRepository GetScheduleRepository()
         {
@@ -56,7 +48,7 @@ namespace UmbracoAppointmentSchedule.Core.Test
                 AssignOnHolidays = true,
                 AssignOnWeekends = true,
                 NumberOfTimeSlotsForAppointments = 3,
-                HolidayDates = new List<DateTime> { new DateTime(2016, 6, 6) },
+                HolidayDates = new List<DateTime> {new DateTime(2016, 6, 6)},
                 Appointments =
                     new List<Appointment>
                     {

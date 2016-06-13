@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using UmbracoAppointmentSchedule.Core.Factories;
+using UmbracoAppointmentSchedule.Core.Models;
 
-namespace UmbracoAppointmentSchedule.Core.Test
+namespace UmbracoAppointmentSchedule.Core.Test.Tests
 {
     [TestFixture]
     public class WeekScheduleTests

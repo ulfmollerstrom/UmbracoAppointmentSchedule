@@ -1,6 +1,8 @@
-using System;
+using UmbracoAppointmentSchedule.Core.Common;
+using UmbracoAppointmentSchedule.Core.Models;
+using UmbracoAppointmentSchedule.Core.Repositories;
 
-namespace UmbracoAppointmentSchedule.Core
+namespace UmbracoAppointmentSchedule.Core.Factories
 {
     public class PopulatedWeekScheduleFactory
     {
