@@ -11,7 +11,6 @@ namespace UmbracoAppointmentSchedule.Core.Test
     [TestFixture]
     public class WeekScheduleFactoryTests
     {
-
         [Test]
         public void WeekSchedule()
         {

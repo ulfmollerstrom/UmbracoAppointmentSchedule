@@ -23,14 +23,7 @@ namespace UmbracoAppointmentSchedule.Core
             if (!AssignOnHolidays)
                 dates = RemoveHolidayDates(dates, HolidayDates);
 
-            var daySchedules = dates.Select(date => new DaySchedule
-                                                    {
-                                                      Date = date,
-                                                      NumberOfTimeSlotsForAppointments = NumberOfTimeSlotsForAppointments
-                                                     });
-
-            var weekSchedule = new WeekSchedule {Today = Today};
-            weekSchedule.CreateWithEmptyTimeSlots(daySchedules);
+            var weekSchedule = GetWeekSchedule(GetDaySchedules(NumberOfTimeSlotsForAppointments, dates), Today);
 
             return weekSchedule;
         }
