@@ -1,3 +1,4 @@
+using System;
 using UmbracoAppointmentSchedule.Core.Common;
 using UmbracoAppointmentSchedule.Core.Models;
 using UmbracoAppointmentSchedule.Core.Repositories;
@@ -31,41 +32,37 @@ namespace UmbracoAppointmentSchedule.Core.Factories
                 case ScheduleConfiguration.WeekWithOutWeekendAndHolidays:
                     weekSchedule = CreateWeekWithOutWeekendAndHolidays();
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            
+
             return weekSchedule;
         }
 
         private WeekSchedule CreateWeekWithOutWeekendAndHolidays()
         {
-            var weekSchedule = new WeekScheduleFactory().CreateWeekWithOutWeekendAndHolidays(ScheduleRepository.CurrentDate,
-                                                                                             ScheduleRepository.NumberOfTimeSlotsForAppointments,
-                                                                                             ScheduleRepository.HolidayDates);
+            var weekSchedule = new WeekScheduleFactory().CreateWeekWithOutWeekendAndHolidays(ScheduleRepository.CurrentDate, ScheduleRepository.NumberOfTimeSlotsForAppointments, ScheduleRepository.HolidayDates);
             weekSchedule.AddRange(ScheduleRepository.Appointments);
             return weekSchedule;
         }
 
         private WeekSchedule CreateWeekWithOutHolidays()
         {
-            var weekSchedule = new WeekScheduleFactory().CreateWeekWithOutHolidays(ScheduleRepository.CurrentDate,
-                                                                                   ScheduleRepository.NumberOfTimeSlotsForAppointments,
-                                                                                   ScheduleRepository.HolidayDates);
+            var weekSchedule = new WeekScheduleFactory().CreateWeekWithOutHolidays(ScheduleRepository.CurrentDate, ScheduleRepository.NumberOfTimeSlotsForAppointments, ScheduleRepository.HolidayDates);
             weekSchedule.AddRange(ScheduleRepository.Appointments);
             return weekSchedule;
         }
 
         private WeekSchedule CreateWeekWithOutWeekend()
         {
-            var weekSchedule = new WeekScheduleFactory().CreateWeekWithOutWeekend(ScheduleRepository.CurrentDate,
-                                                                                  ScheduleRepository.NumberOfTimeSlotsForAppointments);
+            var weekSchedule = new WeekScheduleFactory().CreateWeekWithOutWeekend(ScheduleRepository.CurrentDate, ScheduleRepository.NumberOfTimeSlotsForAppointments);
             weekSchedule.AddRange(ScheduleRepository.Appointments);
             return weekSchedule;
         }
 
         private WeekSchedule CreateFullWeek()
         {
-            var weekSchedule = new WeekScheduleFactory().CreateFullWeek(ScheduleRepository.CurrentDate,
-                                                                        ScheduleRepository.NumberOfTimeSlotsForAppointments);
+            var weekSchedule = new WeekScheduleFactory().CreateFullWeek(ScheduleRepository.CurrentDate, ScheduleRepository.NumberOfTimeSlotsForAppointments);
             weekSchedule.AddRange(ScheduleRepository.Appointments);
             return weekSchedule;
         }
