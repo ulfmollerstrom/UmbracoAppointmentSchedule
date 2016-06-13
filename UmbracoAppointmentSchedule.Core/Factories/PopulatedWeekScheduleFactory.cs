@@ -6,12 +6,11 @@ namespace UmbracoAppointmentSchedule.Core.Factories
 {
     public class PopulatedWeekScheduleFactory
     {
-        public ScheduleRepository ScheduleRepository { get; private set; }
+        public ScheduleRepository ScheduleRepository { get; }
 
         public PopulatedWeekScheduleFactory(ScheduleRepository scheduleRepository)
         {
             ScheduleRepository = scheduleRepository;
-
         }
 
         public WeekSchedule Create()
@@ -27,13 +26,31 @@ namespace UmbracoAppointmentSchedule.Core.Factories
                     weekSchedule = CreateWeekWithOutWeekend();
                     break;
                 case ScheduleConfiguration.WeekWithOutHolidays:
+                    weekSchedule = CreateWeekWithOutHolidays();
                     break;
                 case ScheduleConfiguration.WeekWithOutWeekendAndHolidays:
-                    break;
-                default:
+                    weekSchedule = CreateWeekWithOutWeekendAndHolidays();
                     break;
             }
             
+            return weekSchedule;
+        }
+
+        private WeekSchedule CreateWeekWithOutWeekendAndHolidays()
+        {
+            var weekSchedule = new WeekScheduleFactory().CreateWeekWithOutWeekendAndHolidays(ScheduleRepository.CurrentDate,
+                                                                                             ScheduleRepository.NumberOfTimeSlotsForAppointments,
+                                                                                             ScheduleRepository.HolidayDates);
+            weekSchedule.AddRange(ScheduleRepository.Appointments);
+            return weekSchedule;
+        }
+
+        private WeekSchedule CreateWeekWithOutHolidays()
+        {
+            var weekSchedule = new WeekScheduleFactory().CreateWeekWithOutHolidays(ScheduleRepository.CurrentDate,
+                                                                                   ScheduleRepository.NumberOfTimeSlotsForAppointments,
+                                                                                   ScheduleRepository.HolidayDates);
+            weekSchedule.AddRange(ScheduleRepository.Appointments);
             return weekSchedule;
         }
 
