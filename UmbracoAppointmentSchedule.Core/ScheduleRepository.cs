@@ -15,5 +15,32 @@ namespace UmbracoAppointmentSchedule.Core
 
         [JsonIgnore]
         public DateTime CurrentDate { get; set; }
+
+        public string Serialize()
+        {
+            return Serialize(this);
+        }
+
+        private static string Serialize(ScheduleRepository scheduleRepository)
+        {
+            return JsonConvert.SerializeObject(scheduleRepository);
+        }
+
+        public void Deserialize(string json, DateTime currentDate)
+        {
+            var tmp = Deserialize(json);
+            AssignOnWeekends = tmp.AssignOnWeekends;
+            AssignOnHolidays = tmp.AssignOnWeekends;
+            NumberOfTimeSlotsForAppointments = tmp.NumberOfTimeSlotsForAppointments;
+            HolidayDates = tmp.HolidayDates;
+            Appointments = tmp.Appointments;
+            ScheduleConfig = tmp.ScheduleConfig;
+            CurrentDate = currentDate;
+        }
+
+        private static ScheduleRepository Deserialize(string json)
+        {
+            return JsonConvert.DeserializeObject<ScheduleRepository>(json);
+        }
     }
 }

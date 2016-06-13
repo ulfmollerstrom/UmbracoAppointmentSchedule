@@ -12,21 +12,41 @@ namespace UmbracoAppointmentSchedule.Core.Test
     public class SerializeScheduleRepositoryTests
     {
         [Test]
-        public void SerializeToJson()
+        public void SerializeToJsonTest()
         {
             //Arrange
             //var expected = new
             
 
             //Act
-            var actual = GetScheduleRepository();
-            var jsonString = "";
+            var scheduleRepository = GetScheduleRepository();
+            var jsonString = scheduleRepository.Serialize();
 
 
             //Assert
-
+            Assert.IsNotEmpty(jsonString);
 
         }
+
+        [Test]
+        public void DeserializeToScheduleRepositoryTest()
+        {
+            //Arrange
+            //var expected = new
+            
+            //Act
+            var scheduleRepository = GetScheduleRepository();
+            var jsonString = scheduleRepository.Serialize();
+
+            var actual = new ScheduleRepository();
+            actual.Deserialize(jsonString, DateTime.Today);
+
+            //Assert
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(jsonString, actual.Serialize());
+
+        }
+
 
         private static ScheduleRepository GetScheduleRepository()
         {
