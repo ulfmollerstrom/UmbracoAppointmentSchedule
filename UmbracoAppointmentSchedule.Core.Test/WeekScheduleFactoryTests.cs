@@ -22,7 +22,7 @@ namespace UmbracoAppointmentSchedule.Core.Test
                 AssignOnHolidays = true,
                 Today = new DateTime(2016, 6, 10),
                 NumberOfTimeSlotsForAppointments = 3,
-                Holidays = new List<DateTime> {new DateTime(2016, 6, 6)}
+                HolidayDates = new List<DateTime> {new DateTime(2016, 6, 6)}
             };
 
             //Act
@@ -64,7 +64,7 @@ namespace UmbracoAppointmentSchedule.Core.Test
             {
                 AssignOnHolidays = false,
                 Today = new DateTime(2016, 6, 6),
-                Holidays = new List<DateTime> { new DateTime(2016, 6, 6) }
+                HolidayDates = new List<DateTime> { new DateTime(2016, 6, 6) }
             };
 
             //Act
@@ -92,5 +92,97 @@ namespace UmbracoAppointmentSchedule.Core.Test
             Assert.AreEqual(5, actual.DaySchedules.Count);
         }
 
+        [Test]
+        public void CreateFullWeekNoRestrictions()
+        {
+            //Arrange
+            var factory = new WeekScheduleFactory
+            {
+                AssignOnWeekends = true,
+                AssignOnHolidays = true,
+                Today = new DateTime(2016, 6, 13),
+                NumberOfTimeSlotsForAppointments = 3
+            };
+
+            //Act
+            var actual = factory.CreateFullWeek(today: new DateTime(2016, 6, 10),
+                                                numberOfTimeSlotsForAppointments: 3);
+
+            //Assert
+            Assert.AreEqual(7, actual.DaySchedules.Count);
+            Assert.AreEqual(3, actual.DaySchedules[0].Appointments.Count);
+
+        }
+
+        [Test]
+        public void CreateWeekWithOutWeekend()
+        {
+            //Arrange
+            var today = new DateTime(2016, 6, 13);
+            var factory = new WeekScheduleFactory
+            {
+                AssignOnWeekends = false,
+                AssignOnHolidays = true,
+                Today = today,
+                NumberOfTimeSlotsForAppointments = 3
+            };
+
+            //Act
+            var actual = factory.CreateWeekWithOutWeekend(today: today,
+                                                          numberOfTimeSlotsForAppointments: 3);
+
+            //Assert
+            Assert.AreEqual(5, actual.DaySchedules.Count);
+            Assert.AreEqual(3, actual.DaySchedules[0].Appointments.Count);
+
+        }
+
+        [Test]
+        public void CreateWeekWithOutHolidays()
+        {
+            //Arrange
+            var today = new DateTime(2016, 6, 10);
+            var factory = new WeekScheduleFactory
+            {
+                AssignOnWeekends = true,
+                AssignOnHolidays = false,
+                Today = today,
+                NumberOfTimeSlotsForAppointments = 3
+            };
+
+            //Act
+            var actual = factory.CreateWeekWithOutHolidays(today: today,
+                                                           numberOfTimeSlotsForAppointments: 3,
+                                                           holidays: new List<DateTime> { new DateTime(2016, 6, 6)});
+
+            //Assert
+            Assert.AreEqual(6, actual.DaySchedules.Count);
+            Assert.AreEqual(3, actual.DaySchedules[0].Appointments.Count);
+
+        }
+
+        [Test]
+        public void CreateWeekWithOutWeekendAndHolidays()
+        {
+            //Arrange
+            var today = new DateTime(2016, 6, 10);
+            var factory = new WeekScheduleFactory
+            {
+                AssignOnWeekends = false,
+                AssignOnHolidays = false,
+                Today = today,
+                NumberOfTimeSlotsForAppointments = 3
+            };
+
+            //Act
+            var actual = factory.CreateWeekWithOutWeekendAndHolidays(today: today,
+                                                                     numberOfTimeSlotsForAppointments: 3,
+                                                                     holidays: new List<DateTime> { new DateTime(2016, 6, 6) });
+
+            //Assert
+            Assert.AreEqual(4, actual.DaySchedules.Count);
+            Assert.AreEqual(3, actual.DaySchedules[0].Appointments.Count);
+
+        }
     }
 }

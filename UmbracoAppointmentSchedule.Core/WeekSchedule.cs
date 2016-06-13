@@ -46,5 +46,10 @@ namespace UmbracoAppointmentSchedule.Core
         {
             return appointments.Sum(appointment => Add(appointment) ? 1 : 0);
         }
+
+        public void CreateWithEmptyTimeSlots(IEnumerable<DaySchedule> daySchedules)
+        {
+            DaySchedules.AddRange(daySchedules);
+        }
     }
 }

@@ -106,16 +106,18 @@ namespace UmbracoAppointmentSchedule.Core.Test
         public void AddRangeAppointments()
         {
             //Arrange
+            var today = DateTime.Today;
             var factory = new WeekScheduleFactory
             {
-                Today = DateTime.Today,
+                Today = today,
                 NumberOfTimeSlotsForAppointments = 3,
-                AssignOnWeekends = true
+                AssignOnWeekends = true,
+                AssignOnHolidays = true
             };
 
             var weekSchedule = factory.Create();
 
-            var success = weekSchedule.AddRange(appointments: AppointmentsRange());
+            var success = weekSchedule.AddRange(AppointmentsRange(today));
 
             //Act
             var expected = weekSchedule.GetAppointments();
@@ -127,28 +129,28 @@ namespace UmbracoAppointmentSchedule.Core.Test
 
         }
 
-        private IEnumerable<Appointment> AppointmentsRange()
+        private IEnumerable<Appointment> AppointmentsRange(DateTime today)
         {
             return new List<Appointment>
             {
                 new Appointment
                 {
-                    Date = DateTime.Today,
+                    Date = today,
                     Slot = 2,
                     Name = "Nisse Hult",
                     Phone = "24682468"
                 },
                 new Appointment
                 {
-                    Date = DateTime.Today,
+                    Date = today,
                     Slot = 1,
                     Name = "Ebba Hult",
                     Phone = "24682468"
                 },
                 new Appointment
                 {
-                    Date = DateTime.Today.AddDays(-1),
-                    Slot = 2,
+                    Date = today,
+                    Slot = 0,
                     Name = "Arne Hult",
                     Phone = "24682468"
                 }

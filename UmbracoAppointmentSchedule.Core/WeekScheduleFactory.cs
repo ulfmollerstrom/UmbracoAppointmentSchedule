@@ -11,11 +11,17 @@ namespace UmbracoAppointmentSchedule.Core
         public bool AssignOnHolidays { get; set; } = false;
         public DateTime Today { get; set; } = DateTime.Today;
         public int NumberOfTimeSlotsForAppointments { get; set; } = 1;
-        public List<DateTime> Holidays { get; set; } = new List<DateTime>(0);
+        public List<DateTime> HolidayDates { get; set; } = new List<DateTime>(0);
 
         public WeekSchedule Create()
         {
-            var dates = GetThisWeek(Today, AssignOnWeekends);
+            var dates = GetThisWeek(Today);
+
+            if (!AssignOnWeekends)
+                dates = RemoveWeekend(dates);
+            
+            if (!AssignOnHolidays)
+                dates = RemoveHolidayDates(dates, HolidayDates);
 
             var daySchedules = dates.Select(date => new DaySchedule
                                                     {
@@ -24,30 +30,92 @@ namespace UmbracoAppointmentSchedule.Core
                                                      });
 
             var weekSchedule = new WeekSchedule {Today = Today};
-            weekSchedule.DaySchedules.AddRange(daySchedules);
+            weekSchedule.CreateWithEmptyTimeSlots(daySchedules);
 
             return weekSchedule;
         }
 
-        private IEnumerable<DateTime> GetThisWeek(DateTime today, bool assignOnWeekends = false)
+        public WeekSchedule CreateFullWeek(DateTime today, int numberOfTimeSlotsForAppointments)
         {
-            return GetThisWeek(today, new List<DateTime>(0), false, assignOnWeekends);
+            Today = today;
+            NumberOfTimeSlotsForAppointments = numberOfTimeSlotsForAppointments;
+            AssignOnWeekends = true;
+
+            var dates = GetThisWeek(today);
+            var weekSchedule = GetWeekSchedule(GetDaySchedules(numberOfTimeSlotsForAppointments, dates), today);
+
+            return weekSchedule;
         }
 
-        private IEnumerable<DateTime> GetThisWeek(DateTime today, IEnumerable<DateTime> holidays, bool assignOnHolidays = false, bool assignOnWeekends = false)
+        public WeekSchedule CreateWeekWithOutWeekend(DateTime today, int numberOfTimeSlotsForAppointments)
+        {
+            Today = today;
+            NumberOfTimeSlotsForAppointments = numberOfTimeSlotsForAppointments;
+            AssignOnWeekends = false;
+            AssignOnHolidays = true;
+
+            var dates = RemoveWeekend(GetThisWeek(today));
+            var weekSchedule = GetWeekSchedule(GetDaySchedules(numberOfTimeSlotsForAppointments, dates), today);
+
+            return weekSchedule;
+        }
+
+        public WeekSchedule CreateWeekWithOutHolidays(DateTime today, int numberOfTimeSlotsForAppointments, IEnumerable<DateTime> holidays)
+        {
+            Today = today;
+            NumberOfTimeSlotsForAppointments = numberOfTimeSlotsForAppointments;
+            AssignOnWeekends = true;
+            AssignOnHolidays = false;
+
+            var dates = RemoveHolidayDates(GetThisWeek(today), holidays);
+            var weekSchedule = GetWeekSchedule(GetDaySchedules(numberOfTimeSlotsForAppointments, dates), today);
+
+            return weekSchedule;
+        }
+
+        public WeekSchedule CreateWeekWithOutWeekendAndHolidays(DateTime today, int numberOfTimeSlotsForAppointments, IEnumerable<DateTime> holidays)
+        {
+            Today = today;
+            NumberOfTimeSlotsForAppointments = numberOfTimeSlotsForAppointments;
+            AssignOnWeekends = false;
+            AssignOnHolidays = false;
+
+            var dates = RemoveHolidayDates(RemoveWeekend(GetThisWeek(today)), holidays);
+            var weekSchedule = GetWeekSchedule(GetDaySchedules(numberOfTimeSlotsForAppointments, dates), today);
+
+            return weekSchedule;
+        }
+
+        private static WeekSchedule GetWeekSchedule(IEnumerable<DaySchedule> daySchedules, DateTime today)
+        {
+            var weekSchedule = new WeekSchedule {Today = today};
+            weekSchedule.CreateWithEmptyTimeSlots(daySchedules);
+            return weekSchedule;
+        }
+
+        private static IEnumerable<DaySchedule> GetDaySchedules(int numberOfTimeSlotsForAppointments, IEnumerable<DateTime> dates)
+        {
+            var daySchedules = dates.Select(date => new DaySchedule
+            {
+                Date = date,
+                NumberOfTimeSlotsForAppointments = numberOfTimeSlotsForAppointments
+            });
+            return daySchedules;
+        }
+
+        private static IEnumerable<DateTime> GetThisWeek(DateTime today)
         {
             var monday = GetDateForMonday(today);
-
-            var numberOfDaysToAdd = assignOnWeekends ? 7 : 5;
-            var dates = Enumerable.Range(0, numberOfDaysToAdd).Select(i => monday.AddDays(i));
-
-            if (!assignOnHolidays)
-                dates = dates.Except(holidays);
-
+            var dates = Enumerable.Range(0, 7).Select(i => monday.AddDays(i));
             return dates.ToList();
         }
 
-        private DateTime GetDateForMonday(DateTime today)
+        private static IEnumerable<DateTime> RemoveWeekend(IEnumerable<DateTime> dates)
+        {
+            return dates.Take(5).ToList();
+        }
+
+        private static DateTime GetDateForMonday(DateTime today)
         {
             if (today.DayOfWeek == DayOfWeek.Monday)
                 return today;
@@ -58,5 +126,11 @@ namespace UmbracoAppointmentSchedule.Core
 
             return retval;
         }
+
+        private static IEnumerable<DateTime> RemoveHolidayDates(IEnumerable<DateTime> thisWeek, IEnumerable<DateTime> holidays)
+        {
+            return thisWeek.Except(holidays);
+        }
+
     }
 }
