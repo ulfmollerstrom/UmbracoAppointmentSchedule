@@ -37,9 +37,10 @@ namespace UmbracoAppointmentSchedule.Core.Models
 
         public List<Appointment> GetAppointments()
         {
-            return DaySchedules
-                    .SelectMany(daySchedule => daySchedule.Appointments)
-                    .Where(appointment => appointment != null).ToList();
+            var appointments = DaySchedules
+                .SelectMany(daySchedule => daySchedule.Appointments)
+                .Where(appointment => appointment != null).ToList();
+            return appointments;
         }
 
         public int AddRange(IEnumerable<Appointment> appointments)

@@ -113,11 +113,9 @@ namespace UmbracoAppointmentSchedule.Core.Factories
             if (today.DayOfWeek == DayOfWeek.Monday)
                 return today;
 
-            var retval = Enumerable.Range(-7, 6)
-                .Where(i => today.AddDays(i).DayOfWeek == DayOfWeek.Monday)
-                .Select(i => today.AddDays(i)).FirstOrDefault();
-
-            return retval;
+            return Enumerable.Range(-7, 7)
+                             .Where(i => today.AddDays(i).DayOfWeek == DayOfWeek.Monday)
+                             .Select(i => today.AddDays(i)).FirstOrDefault();
         }
 
         private static IEnumerable<DateTime> RemoveHolidayDates(IEnumerable<DateTime> thisWeek, IEnumerable<DateTime> holidays)
